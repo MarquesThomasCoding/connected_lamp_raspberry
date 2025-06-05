@@ -1,7 +1,7 @@
 import network
 import time
 import ujson
-import usocket as socket
+import socket
 import urequests
 import ubinascii
 import uhashlib
