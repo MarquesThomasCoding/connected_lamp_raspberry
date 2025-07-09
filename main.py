@@ -39,12 +39,12 @@ def get_weather(city):
         print("Erreur lors de la récupération météo:", e)
         return None
 
-def switchNeopixel():
+def switchNeopixel(r, g, b):
     n = np.n
     for i in range(n):
-        np[i] = (0, 0, 128)  # bleu foncé
+        np[i] = (r, g, b)
     np.write()
-    print('LEDs bleues allumées')
+    print(f'LEDs allumées en couleur : ({r}, {g}, {b})')
     time.sleep(0.1)
 
 # === CONFIGURATION WI-FI ===
@@ -283,11 +283,18 @@ def connect_to_websocket():
                                 if "rain" in condition:
                                     print('il pleut')
                                     brumisateur.value(1)
-                                    switchNeopixel()
+                                    switchNeopixel((0, 0, 255))
+                                elif "sunny" in condition or "clear" in condition:
+                                    print('il fait beau')
+                                    brumisateur.value(0)
+                                    switchNeopixel((255, 255, 0))
+                                elif "cloudy" in condition:
+                                    print('il y a des nuages')
+                                    brumisateur.value(0)
+                                    switchNeopixel((128, 128, 128))
                                 else:
                                     brumisateur.value(0)
-                                    np.fill((0, 0, 0))
-                                    np.write()
+                                    switchNeopixel((0, 0, 0))
                                 answer = f"Météo à {location}: {condition}, {temp_c}°C"
                                 send_websocket_frame(sock, answer)
                             else:
